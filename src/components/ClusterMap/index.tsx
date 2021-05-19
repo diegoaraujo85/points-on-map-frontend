@@ -1,36 +1,28 @@
-import GoogleMapReact, {
-  ChangeEventValue,
-  ChildComponentProps,
-  ClickEventValue,
-  Coords,
-  Heatmap,
-  MapOptions,
-  MapTypeStyle,
-  Point,
-  Props
-} from 'google-map-react';
+import GoogleMapReact from 'google-map-react';
 import React, { useRef, useState } from 'react';
 import useSwr from 'swr';
 import useSupercluster from 'use-supercluster';
 
-import { ClusterMarker, Container } from './styles';
+import location48Filled from '@iconify-icons/fluent/location-48-filled';
 
-const url = "http://localhost:3333/points";
+// npm install --save-dev @iconify/react @iconify-icons/bytesize
+import Marker from './Marker';
+import { ClusterMarker, Container, LocationPin, Point } from './styles';
+
+const url = process.env.REACT_APP_API_URL || "http://localhost:3333";
+// const url = "http://localhost:3333";
+
 const options = {
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }
 }
-const fetcher = () => fetch(url, options).then(response => response.json());
+const fetcher = () => fetch(`${url}/points`, options).then(response => response.json());
 
-interface MarkerProps {
-  children: JSX.Element;
-  lat: number;
-  lng: number;
-}
 
-const Marker = ({ children }: MarkerProps) => children;
+
+// const Marker = () => children;
 
 interface Coordinates {
   name: string;
@@ -57,13 +49,13 @@ const ClusterMap: React.FC = () => {
 
   const numberOfPointsToLoad = 50000;
 
-  const { data, error } = useSwr(url, { fetcher });
+  const { data, error } = useSwr(`${url}/points`, { fetcher });
   const coords = data && !error ? data.slice(0, numberOfPointsToLoad) : [];
   // console.log(coords)
 
   const points = coords.map((coord: Coordinates, index: number) => ({
     type: "Feature",
-    properties: { cluster: false, pointId: index },
+    properties: { cluster: true, pointId: index },
     geometry: {
       type: "Point",
       coordinates: [
@@ -83,7 +75,7 @@ const ClusterMap: React.FC = () => {
   return (
     <Container>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'AIzaSyDO-L-E0pIejkcxb9BNCU0G_CPRBg_nKKc' }}
+        bootstrapURLKeys={{ key: String(process.env.REACT_APP_MAP_KEY) }}
         defaultCenter={center}
         defaultZoom={zoom}
         yesIWantToUseGoogleMapApiInternals
@@ -102,17 +94,17 @@ const ClusterMap: React.FC = () => {
           ]);
         }}
       >
-        {clusters.map(cluster => {
+        {clusters.map((cluster, index) => {
           const [longitude, latitude] = cluster.geometry.coordinates;
           const {
             cluster: isCluster,
             point_count: pointCount
           } = cluster.properties;
 
-          if (isCluster) {
+          if (pointCount > 1 && isCluster) {
             return (
               <Marker
-                key={`cluster-${cluster.id}`}
+                key={`cluster-${index}`}
                 lat={latitude}
                 lng={longitude}
               >
@@ -121,14 +113,14 @@ const ClusterMap: React.FC = () => {
                     width: `${10 + (pointCount / points.length) * 20}px`,
                     height: `${10 + (pointCount / points.length) * 20}px`
                   }}
-                  onClick={() => {
-                    const expansionZoom = Math.min(
-                      supercluster.getClusterExpansionZoom(cluster.id),
-                      20
-                    );
-                    setZoom(expansionZoom);
-                    // mapRef.current.panTo({ lat: latitude, lng: longitude }) : null;
-                  }}
+                // onClick={() => {
+                //   const expansionZoom = Math.min(
+                //     supercluster.getClusterExpansionZoom(cluster.id),
+                //     20
+                //   );
+                //   setZoom(expansionZoom);
+                //   // mapRef.current.panTo({ lat: latitude, lng: longitude }) : null;
+                // }}
                 >
                   {pointCount}
                 </ClusterMarker>
@@ -141,8 +133,13 @@ const ClusterMap: React.FC = () => {
               key={`point-${cluster.properties.pointId}`}
               lat={latitude}
               lng={longitude}
+              style={{ background: 'none', border: 'none' }}
             >
-              <></>
+              <Point>
+                <LocationPin
+                  icon={location48Filled}
+                />
+              </Point>
             </Marker>
           );
         })}

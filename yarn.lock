@@ -1287,6 +1287,16 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@iconify-icons/bytesize@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/bytesize/-/bytesize-1.1.0.tgz#8d4a5840a2ea20716354b534c59d35e7c199d1c6"
+  integrity sha512-UTrWIuNazf8TdD3X8ijH5FRtCUxosP65ZuA6chOvz9zeyxrfRJOKBj/V+MShLEoAMwn9M8hI5cS+y+h/VaVLlw==
+
+"@iconify-icons/fluent@^1.1.14":
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/fluent/-/fluent-1.1.14.tgz#c192bfd2e1ff7937b999b247072845c7ed958e40"
+  integrity sha512-AiPq8oVGuzquGimzFGlBCzwIZtMA/D39lwIQcIV27PAVMmvwcbmaFKp2cbbO6ehNbJtrrP0bBA7BNebHc+VHVA==
+
 "@iconify/icons-mdi@^1.1.15":
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/@iconify/icons-mdi/-/icons-mdi-1.1.15.tgz#e035130cc480c4318fb4cb21b8b836a2ba32c8b9"

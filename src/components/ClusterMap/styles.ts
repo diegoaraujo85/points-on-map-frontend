@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { Icon } from '@iconify/react';
+
 export const Container = styled.div`
   height: 100vh;
   width: 100%;
@@ -14,6 +16,15 @@ export const ClusterMarker = styled.div`
   justify-content: center;
   align-items: center;
 `
+export const LocationPin = styled(Icon)`
+ color: #EA4335;
+ width: 24px;
+ height: 24px;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+`;
+
 export const Point = styled.div`
   background: none;
   border: none;
